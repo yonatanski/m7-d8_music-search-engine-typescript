@@ -1,8 +1,8 @@
 import React from "react"
 import { useState, useEffect } from "react"
 import { Container, Row, Col, Form } from "react-bootstrap"
+import MainMusic from "../types/iMusic"
 import FetchedMusic from "./FetchedMusic"
-import MainMusic from "../types/IMusic"
 
 function Home() {
   const [query, setquery] = useState("")
@@ -31,16 +31,16 @@ function Home() {
   return (
     <Container>
       <Row>
-        <Col>
+        <Col lg={12}>
           <Form>
             <Form.Label>Search Your Music Here</Form.Label>
             <Form.Control type="text" placeholder="name@example.com" value={query} onChange={(e) => setquery(e.target.value)} />
           </Form>
         </Col>
-        <Col>
-          {/* {music.map((song) => (
-            <FetchedMusic key={song.id} MainMusic={song} />
-          ))} */}
+        <Col lg={3} className="my-3">
+          {music.map((song) => (
+            <FetchedMusic key={song.id} mainMusic={song} />
+          ))}
         </Col>
       </Row>
     </Container>
