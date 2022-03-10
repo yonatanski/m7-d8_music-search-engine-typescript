@@ -1,21 +1,22 @@
 import React from "react"
 import { useState, useEffect } from "react"
 import { Container, Row, Col, Form } from "react-bootstrap"
-import MainMusic from "../types/iMusic"
+import { Track } from "../types/IMusic"
 import FetchedMusic from "./FetchedMusic"
 
 function Home() {
-  const [query, setquery] = useState("")
-  const [music, setMusic] = useState<MainMusic[]>([])
+  const [query, setQuery] = useState("")
+  const [musicResult, setMusicResult] = useState<Track[]>([])
 
-  const getBooks = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     try {
       let response = await fetch(`https://striveschool-api.herokuapp.com/api/deezer/search?q=${query}`)
       if (response.ok) {
-        let data = await response.json()
+        let { data } = await response.json()
         console.log("jsonedbody", data)
-        setMusic(data.data)
-        console.log("setStated", music)
+        setMusicResult(data)
+        console.log("setStated", setMusicResult)
       } else {
         console.log("error fetching books")
       }
@@ -24,23 +25,31 @@ function Home() {
     }
   }
 
-  useEffect(() => {
-    getBooks()
-  }, [query])
+  // useEffect(() => {
+  //   getBooks()
+  // }, [query])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value)
+  }
 
   return (
     <Container>
       <Row>
-        <Col lg={12}>
-          <Form>
+        <Col xs={10} md={8} className="mx-auto">
+          <Form onSubmit={handleSubmit}>
             <Form.Label>Search Your Music Here</Form.Label>
-            <Form.Control type="text" placeholder="name@example.com" value={query} onChange={(e) => setquery(e.target.value)} />
+            <Form.Control type="text" placeholder="name@example.com" value={query} onChange={handleChange} />
           </Form>
         </Col>
-        <Col lg={3} className="my-3">
-          {music.map((song) => (
-            <FetchedMusic key={song.id} mainMusic={song} />
-          ))}
+        <Col xs={10} md={8} className="my-3">
+          <Row>
+            {musicResult.map((song) => (
+              <Col xs={10} md={4}>
+                <FetchedMusic key={song.id} mainMusic={song} />
+              </Col>
+            ))}
+          </Row>
         </Col>
       </Row>
     </Container>
